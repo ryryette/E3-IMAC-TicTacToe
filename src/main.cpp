@@ -4,7 +4,27 @@ void draw_game_board(char const cases[9]);
 
 int main()
 {
-    
+
+/*
+Menu de démarrage
+Vous devez réaliser un menu de démarrage qui permet à l'utilisateur de choisir le mode de jeu (deux joueurs ou un joueur contre l'IA).
+
+Exemple:
+
+Bienvenue dans le jeu du TicTacToe
+Veuillez choisir un mode de jeu :
+1. Deux joueurs
+2. Un joueur contre l'IA
+*/
+
+std::cout <<"Bienvenue dans le jeu du TicTacToe"<< std::endl;
+std::cout <<"Veuillez choisir un mode de jeu :"<< std::endl;
+std::cout <<"1. Deux joueurs"<< std::endl;
+std::cout <<"2. Un joueur contre l'IA"<< std::endl;
+
+int modes {0};
+std::cin >> modes;
+
 /*
 Affichage du plateau de jeu
 Vous devez réaliser une fonction draw_game_board (vous pouvez modifier légèrement le nom de la fonction si vous le souhaitez) qui prend en paramètre un tableau de caractères (char) et affiche le plateau de jeu dans la terminal.
