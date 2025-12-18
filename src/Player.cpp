@@ -1,23 +1,21 @@
+
+
 /*
-Structure de joueur
-Vous devez réaliser une structure Player qui contient les informations suivantes :
-
-name : nom du joueur
-symbol : symbole du joueur (e.g. 'X' ou 'O')
-Cette structure doit être utilisée pour stocker les informations des joueurs et placée dans des fichiers dédiés Player.hpp et Player.cpp.
-
-Vous devez réaliser une fonction create_player qui ne prend aucun paramètre et qui retourne une structure Player initialisée avec les informations du joueur. Cette fonction doit demander le nom du joueur à l'utilisateur (std::cin) et lui demander de choisir un symbole (X ou O généralement mais vous pouvez choisir d'autres symboles si vous le souhaitez).
+Vous devez réaliser une fonction create_player qui ne prend aucun paramètre
+et qui retourne une structure Player initialisée avec les informations du joueur.
+Cette fonction doit demander le nom du joueur à l'utilisateur (std::cin)
+et lui demander de choisir un symbole.
 */
 
-#pragma once
-#include <string>
+#include "Player.hpp"
+#include <iostream>
 
-struct Player 
+Player create_player ()
 {
-    std::string nom {};
-    char symbole {};
-};
-
-Player create_player();
-
-
+    Player joueur {};
+    std::cout <<"Entrez votre nom de joeur";
+    std::cin >>joueur.nom;
+    std::cout <<"Entrez votre symbole pour jouer :";
+    std::cin >>joueur.symbole;
+    return joueur; 
+}
