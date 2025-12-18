@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Player.hpp"
 
 void draw_game_board(char const cases[9]);
 
@@ -32,13 +33,34 @@ Vous devez réaliser un mode de jeu où deux joueurs peuvent s'affronter sur le 
 Le jeu doit alterner entre les deux joueurs pour leur permettre de jouer un coup à tour de rôle.
 */
 
+/*
+Structure de joueur
+Vous devez réaliser une structure Player qui contient les informations suivantes :
+
+name : nom du joueur
+symbol : symbole du joueur (e.g. 'X' ou 'O')
+Cette structure doit être utilisée pour stocker les informations des joueurs
+et placée dans des fichiers dédiés Player.hpp et Player.cpp.
+*/
+
 if (modes == 1)
 {
     std::cout << "Mode deux joueurs"<< std::endl;
+    Player joueur1 { create_player() };
+    Player joueur2 { create_player() };
+    std::cout <<"Joueur 1 : " << joueur1.nom << " (" << joueur1.symbole << ")"<< std::endl;
+    std::cout <<"Joueur 2 : " << joueur2.nom << " (" << joueur2.symbole << ")"<< std::endl; 
+
 }
 else if (modes == 2)
 {
-    std::cout << "Mode joeur contre IA"<< std::endl;
+    std::cout << "Mode joueur contre IA"<< std::endl;
+    Player joueur {create_player ()};
+    Player ia {};
+    ia.nom ="IA";
+    ia.symbole = '0';
+    std::cout <<"Joueur :" << joueur.nom << " (" << joueur.symbole << ")"<< std::endl;
+    std::cout<<"Adversaire : " << ia.nom << " (" << ia.symbole << ")"<< std::endl;
 }
 else
 {
