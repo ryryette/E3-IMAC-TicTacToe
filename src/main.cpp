@@ -26,6 +26,26 @@ int modes {0};
 std::cin >> modes;
 
 /*
+Deux joueurs
+Vous devez réaliser un mode de jeu où deux joueurs peuvent s'affronter sur le jeu.
+
+Le jeu doit alterner entre les deux joueurs pour leur permettre de jouer un coup à tour de rôle.
+*/
+
+if (modes == 1)
+{
+    std::cout << "Mode deux joueurs"<< std::endl;
+}
+else if (modes == 2)
+{
+    std::cout << "Mode joeur contre IA"<< std::endl;
+}
+else
+{
+    std::cout << "Veuillez choisir parmis le mode 1 ou 2 "<< std::endl;
+}
+
+/*
 Affichage du plateau de jeu
 Vous devez réaliser une fonction draw_game_board (vous pouvez modifier légèrement le nom de la fonction si vous le souhaitez) qui prend en paramètre un tableau de caractères (char) et affiche le plateau de jeu dans la terminal.
 Le plateau de jeu doit être affiché de la manière suivante :
