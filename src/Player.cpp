@@ -8,24 +8,22 @@ et lui demander de choisir un symbole.
 #include "Player.hpp"
 #include <iostream>
 
-    Player create_player()
-    {
+Player create_player()
+{
     return create_player('\0');
-    }
+}
 
-    Player create_player(char symbole_pris)
-    {
+Player create_player(char symbole_pris)
+{
     Player p;
     std::cout << "Entrez votre nom de joueur : ";
     std::cin >> p.nom;
-    std::cin.ignore(1000, '\n');
 
-        do {
-            std::cout << "Choisissez votre symbole (X ou O) : ";
-            std::cin >> p.symbole;
-            std::cin.ignore(1000, '\n');
+    do {
+        std::cout << "Choisissez votre symbole (X ou O) : ";
+        std::cin >> p.symbole;
 
-                if (std::cin.fail())
+        if (std::cin.fail())
         {
             std::cin.clear();
             std::cin.ignore(1000, '\n');
@@ -33,6 +31,8 @@ et lui demander de choisir un symbole.
             std::cout << "Entrée invalide. Recommence.\n";
             continue;
         }
+
+        std::cin.ignore(1000, '\n');
 
         if (p.symbole >= 'a' && p.symbole <= 'z')
             p.symbole = p.symbole - 'a' + 'A';
