@@ -1,13 +1,21 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include "Player.hpp"
 
 void draw_game_board(char const cases[9]);
+bool board_rempli(char const cases[9]);
+bool victoire(char const cases[9], char symbole);
+int ia_choix_case(char const cases[9]);
+
 
 int main()
 {
 
-int modes {0};
-while (modes !=1 && modes !=2)
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+    int modes {0};
+    while (modes !=1 && modes !=2)
 {
     /*
     Menu de démarrage
@@ -28,11 +36,17 @@ while (modes !=1 && modes !=2)
 
     std::cin >> modes;
 
-    if (modes !=1 && modes != 2)
-    {
-         std::cout << "Veuillez choisir parmis le mode 1 ou 2 "<< std::endl;
-    }
-  
+if (std::cin.fail())
+{
+    std::cin.clear();
+    std::cin.ignore(1000, '\n');
+    modes = 0;
+}
+
+if (modes != 1 && modes != 2)
+{
+    std::cout << "Veuillez choisir parmis le mode 1 ou 2 " << std::endl;
+}
 }
 
 Player joueur1 {};
@@ -59,7 +73,7 @@ if (modes == 1)
 {
     std::cout << "Mode deux joueurs"<< std::endl;
     joueur1 = create_player();
-    joueur2 = create_player();
+    joueur2 = create_player(joueur1.symbole);
     std::cout << "Joueur 1 : " << joueur1.nom << " (" << joueur1.symbole << ")"<< std::endl;
     std::cout << "Joueur 2 : " << joueur2.nom << " (" << joueur2.symbole << ")"<< std::endl; 
 
@@ -79,7 +93,7 @@ else if (modes == 2)
     std::cout << "Mode joueur contre IA"<< std::endl;
     joueur1 = create_player();
     joueur2.nom = "IA";
-    joueur2.symbole = 'O';
+    joueur2.symbole = (joueur1.symbole == 'X') ? 'O' : 'X';
     std::cout << "Joueur : " << joueur1.nom << " (" << joueur1.symbole << ")"<< std::endl;
     std::cout << "Adversaire : " << joueur2.nom << " (" << joueur2.symbole << ")"<< std::endl;
 }
@@ -99,18 +113,125 @@ Le plateau doit être représenté dans le code sous forme d'un tableau de carac
 
 ⚠️ Ici le nombre de cases du plateau est connu à l'avance, vous devez donc de préférence utiliser un tableau statique plutôt qu'un tableau dynamique pour représenter le plateau de jeu.
 */
-    char cases[9] {'1','2','3','4','5','6','7','8','9'};
     
+char cases[9] {'1','2','3','4','5','6','7','8','9'};
+
+while (true)
+{
     draw_game_board(cases);
+
+    /*
+    Tour de jeu
+    Vous devez permettre aux joueurs de jouer à tour de rôle.
+    À chaque tour, le joueur choisit une case libre et son symbole est placé sur le plateau.
+    */
 
     int choix_case {0};
-    std::cout <<joueur1.nom <<", choisis une case (1 à 9) : ";
-    std::cin >>choix_case;
+    std::cout << joueur1.nom << ", choisis une case (1 à 9) : ";
+    std::cin >> choix_case;
+    if (std::cin.fail())
+{
+    std::cin.clear();
+    std::cin.ignore(1000, '\n');
+    choix_case = 0;
+}
+
+
+    while (choix_case < 1 || choix_case > 9 ||
+           cases[choix_case - 1] == joueur1.symbole ||
+           cases[choix_case - 1] == joueur2.symbole)
+    {
+        std::cout << "Choisis une case DISPONIBLE (1 à 9) : ";
+        std::cin >> choix_case;
+if (std::cin.fail())
+{
+    std::cin.clear();
+    std::cin.ignore(1000, '\n');
+    choix_case = 0;
+}
+
+        
+    }
 
     cases[choix_case - 1] = joueur1.symbole;
-
     draw_game_board(cases);
 
+    if (victoire(cases, joueur1.symbole))
+{
+    std::cout << joueur1.nom << " a gagné !" << std::endl;
+    break;
+}
+
+    if (board_rempli(cases))
+{
+    std::cout << "Égalité !" << std::endl;
+    break;
+}
+
+if (modes == 1)
+{
+    std::cout << joueur2.nom << ", choisis une case (1 à 9) : ";
+    std::cin >> choix_case;
+
+    if (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore(1000, '\n');
+        choix_case = 0;
+    }
+
+    while (choix_case < 1 || choix_case > 9 ||
+           cases[choix_case - 1] == joueur1.symbole ||
+           cases[choix_case - 1] == joueur2.symbole)
+    {
+        std::cout << "Choisis une case DISPONIBLE (1 à 9) : ";
+        std::cin >> choix_case;
+
+        if (std::cin.fail())
+        {
+            std::cin.clear();
+            std::cin.ignore(1000, '\n');
+            choix_case = 0;
+        }
+    }
+
+    cases[choix_case - 1] = joueur2.symbole;
+    draw_game_board(cases);
+
+    if (victoire(cases, joueur2.symbole))
+    {
+        std::cout << joueur2.nom << " a gagné !" << std::endl;
+        break;
+    }
+
+    if (board_rempli(cases))
+    {
+        std::cout << "Égalité !" << std::endl;
+        break;
+    }
+}
+else // mode 2
+{
+    int choix_ia = ia_choix_case(cases);
+    std::cout << joueur2.nom << " joue : " << choix_ia << std::endl;
+
+    cases[choix_ia - 1] = joueur2.symbole;
+    draw_game_board(cases);
+
+    if (victoire(cases, joueur2.symbole))
+    {
+        std::cout << joueur2.nom << " a gagné !" << std::endl;
+        break;
+    }
+
+    if (board_rempli(cases))
+    {
+        std::cout << "Égalité !" << std::endl;
+        break;
+    }
+}
+
+}
     return 0;
 }
 
@@ -126,5 +247,43 @@ void draw_game_board(char const cases[9])
     std::cout <<"| "<< cases[3] << "| "<< cases[4] << "| "<< cases[5] << "| "<<std::endl;
     std::cout <<"| "<< cases[6] << "| "<< cases[7] << "| "<< cases[8] << "| "<<std::endl;
 }
+
+bool board_rempli(char const cases[9])
+{
+    for (int i = 0; i < 9; ++i)
+    {
+        if (cases[i] >= '1' && cases[i] <= '9')
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool victoire(char const cases[9], char symbole)
+{
+    return
+        (cases[0] == symbole && cases[1] == symbole && cases[2] == symbole) ||
+        (cases[3] == symbole && cases[4] == symbole && cases[5] == symbole) ||
+        (cases[6] == symbole && cases[7] == symbole && cases[8] == symbole) ||
+
+        (cases[0] == symbole && cases[3] == symbole && cases[6] == symbole) ||
+        (cases[1] == symbole && cases[4] == symbole && cases[7] == symbole) ||
+        (cases[2] == symbole && cases[5] == symbole && cases[8] == symbole) ||
+
+        (cases[0] == symbole && cases[4] == symbole && cases[8] == symbole) ||
+        (cases[2] == symbole && cases[4] == symbole && cases[6] == symbole);
+}
+
+int ia_choix_case(char const cases[9])
+{
+    int choix = 0;
+    do {
+        choix = (std::rand() % 9) + 1; 
+    } while (!(cases[choix - 1] >= '1' && cases[choix - 1] <= '9')); 
+
+    return choix;
+}
+
 
 
